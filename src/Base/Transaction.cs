@@ -21,20 +21,27 @@ namespace Compori.Data
         protected IParameterFactory parameterFactory;
 
         /// <summary>
+        /// The hydrator factory
+        /// </summary>
+        protected IHydratorFactory hydratorFactory;
+
+        /// <summary>
         /// A list of created commands.
         /// </summary>
-        private List<ICommand> commands;
+        private readonly List<ICommand> commands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction" /> class.
         /// </summary>
         /// <param name="transaction">The transaction.</param>
         /// <param name="parameterFactory">The parameter factory.</param>
-        public Transaction(IDbTransaction transaction, IParameterFactory parameterFactory)
+        /// <param name="hydratorFactory">The hydrator factory.</param>
+        public Transaction(IDbTransaction transaction, IParameterFactory parameterFactory, IHydratorFactory hydratorFactory)
         {
             this.transaction = transaction;
             this.parameterFactory = parameterFactory;
             this.commands = new List<ICommand>();
+            this.hydratorFactory = hydratorFactory;
         }
 
         /// <summary>
@@ -50,7 +57,7 @@ namespace Compori.Data
             internalCommand.CommandTimeout = timeout;
             internalCommand.Transaction = this.transaction;
 
-            var command = new Command(internalCommand, this.parameterFactory);
+            var command = new Command(internalCommand, this.parameterFactory, this.hydratorFactory);
             this.commands.Add(command);
             return command;
         }

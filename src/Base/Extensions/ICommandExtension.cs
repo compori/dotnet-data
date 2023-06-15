@@ -31,7 +31,7 @@ namespace Compori.Data.Extensions
         /// <param name="command">The command.</param>
         /// <param name="hydrate">The hydrate.</param>
         /// <returns>IList&lt;T&gt;.</returns>
-        public static IList<T> ReadList<T>(this ICommand command, Func<IDataReader, T> hydrate)
+        public static IList<T> ReadList<T>(this ICommand command, Func<IDataRecord, T> hydrate)
         {
             return new List<T>(command.Read(hydrate));
         }        

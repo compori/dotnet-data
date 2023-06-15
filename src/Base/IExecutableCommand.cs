@@ -30,19 +30,49 @@ namespace Compori.Data
         T ExecuteScalarOrDefault<T>();
 
         /// <summary>
+        /// Reads the result and creates a <see cref="IEnumerable{T}" />.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        IEnumerable<T> Read<T>() where T : class;
+
+        /// <summary>
+        /// Reads result by using a specified hydrator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hydrator">The hydrator.</param>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        IEnumerable<T> Read<T>(IHydrator<T> hydrator);
+
+        /// <summary>
         /// Reads the result and creates a <see cref="IEnumerable{T}"/> using <paramref name="hydrate"/> function.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hydrate">The build function.</param>
+        /// <param name="hydrate">The hydration function.</param>
         /// <returns>IEnumerable&lt;T&gt;.</returns>
-        IEnumerable<T> Read<T>(Func<IDataReader, T> hydrate);
+        IEnumerable<T> Read<T>(Func<IDataRecord, T> hydrate);
+
+        /// <summary>
+        /// Reads the result and creates an object of <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>T.</returns>
+        T ReadFirstOrDefault<T>() where T : class;
+
+        /// <summary>
+        /// Reads result by using a specified hydrator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hydrator">The hydrator.</param>
+        /// <returns>Returns a the object T.</returns>
+        T ReadFirstOrDefault<T>(IHydrator<T> hydrator);
 
         /// <summary>
         /// Reads the result and creates an object of <typeparamref name="T"/> using <paramref name="hydrate"/> function.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="hydrate">The build function.</param>
+        /// <param name="hydrate">The hydration function.</param>
         /// <returns>Returns a the object T.</returns>
-        T ReadFirstOrDefault<T>(Func<IDataReader, T> hydrate);
+        T ReadFirstOrDefault<T>(Func<IDataRecord, T> hydrate);
     }
 }

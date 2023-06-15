@@ -1,47 +1,12 @@
 ﻿using Compori.Data;
-using Compori.Data.Extensions;
+using Compori.Data.SqlClient.Extensions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using Xunit;
 
-namespace ComporiTesting.Data.Extensions
+namespace ComporiTesting.Data.SqlClient.Extensions
 {
     public class ICommandExtensionTests
     {
-        [Fact]
-        public void TestExecuteSingle()
-        {
-            Mock<ICommand> mock;
-
-            var message = "MyMessage";
-
-            mock = new Mock<ICommand>();
-            mock.Setup(service => service.Execute()).Returns(1);
-            mock.Object.ExecuteSingle(message);
-            mock.Verify(service => service.Execute(), Times.Once());
-
-            mock = new Mock<ICommand>();
-            mock.Setup(service => service.Execute()).Returns(0);
-            var ex = Assert.Throws<ExecuteSingleCommandException>(() => mock.Object.ExecuteSingle(message));
-            Assert.Equal(message, ex.Message);
-            mock.Verify(service => service.Execute(), Times.Once());
-        }
-
-        [Fact]
-        public void TestReadList()
-        {
-            Mock<ICommand> mock;
-            Func<IDataRecord, string> func = delegate (IDataRecord reader) { return null; };
-
-            mock = new Mock<ICommand>();
-            mock.Setup(service => service.Read<string>(func)).Returns(new List<string>());
-            Assert.Empty(mock.Object.ReadList<string>(func));
-            mock.Verify(service => service.Read<string>(func), Times.Once());
-        }
-        
-        /*
         [Fact]
         public void TestSelectOne()
         {
@@ -85,6 +50,5 @@ namespace ComporiTesting.Data.Extensions
             mock.Verify(service => service.WithQuery($"SELECT TOP 1 {field} FROM {table} WHERE {where}"), Times.Once());
             mockExecute.Verify(service => service.ExecuteScalarOrDefault<int>(), Times.Once());
         }
-        */
     }
 }

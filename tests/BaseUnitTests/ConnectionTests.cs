@@ -14,7 +14,7 @@ namespace ComporiTesting.Data
             var parameterMock = new Mock<IParameterFactory>();
             var mock = new Mock<IDbConnection>();
 
-            IConnection sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            IConnection sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Same(mock.Object, sut.Connection);
         }
 
@@ -28,7 +28,7 @@ namespace ComporiTesting.Data
 
             // first case cannot open connection
             mock.Setup(service => service.State).Returns(ConnectionState.Closed);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<ConnectionException>(() => sut.CreateCommand());
             mock.Verify(service => service.Open(), Times.Once);
             mock.Verify(service => service.State, Times.Exactly(2));
@@ -37,7 +37,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbConnection>();
             mock.Setup(service => service.State).Returns(ConnectionState.Open);
             mock.Setup(service => service.CreateCommand()).Returns(command);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.CreateCommand();
             Assert.NotNull(actual);
             Assert.IsType<Command>(actual);
@@ -51,7 +51,7 @@ namespace ComporiTesting.Data
             mock.Setup(service => service.Open())
                 .Callback(() => mock.Setup(service => service.State).Returns(ConnectionState.Open));
             mock.Setup(service => service.CreateCommand()).Returns(command);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.CreateCommand();
             Assert.NotNull(actual);
             Assert.IsType<Command>(actual);
@@ -76,7 +76,7 @@ namespace ComporiTesting.Data
             commandMock = new Mock<IDbCommand>();
             command = commandMock.Object;
             mock.Setup(service => service.State).Returns(ConnectionState.Closed);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<ConnectionException>(() => sut.CreateCommand(expectedTimeout));
             mock.Verify(service => service.Open(), Times.Once);
             mock.Verify(service => service.State, Times.Exactly(2));
@@ -89,7 +89,7 @@ namespace ComporiTesting.Data
             mock.Setup(service => service.CreateCommand()).Returns(command);
             commandMock.SetupSet(p => p.CommandTimeout = It.IsAny<int>()).Callback<int>(value => actualTimeout = value);
 
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.CreateCommand(expectedTimeout);
             Assert.NotNull(actual);
             Assert.IsType<Command>(actual);
@@ -109,7 +109,7 @@ namespace ComporiTesting.Data
             mock.Setup(service => service.CreateCommand()).Returns(command);
             commandMock.SetupSet(p => p.CommandTimeout = It.IsAny<int>()).Callback<int>(value => actualTimeout = value);
 
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
 
             actual = sut.CreateCommand(expectedTimeout);
 
@@ -134,7 +134,7 @@ namespace ComporiTesting.Data
 
             // first case cannot open connection
             mock.Setup(service => service.State).Returns(ConnectionState.Closed);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<ConnectionException>(() => sut.BeginTransaction());
             mock.Verify(service => service.Open(), Times.Once);
             mock.Verify(service => service.State, Times.Exactly(2));
@@ -143,7 +143,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbConnection>();
             mock.Setup(service => service.State).Returns(ConnectionState.Open);
             mock.Setup(service => service.BeginTransaction()).Returns(transaction);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.BeginTransaction();
             Assert.NotNull(actual);
             Assert.IsType<Transaction>(actual);
@@ -157,7 +157,7 @@ namespace ComporiTesting.Data
             mock.Setup(service => service.Open())
                 .Callback(() => mock.Setup(service => service.State).Returns(ConnectionState.Open));
             mock.Setup(service => service.BeginTransaction()).Returns(transaction);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.BeginTransaction();
             Assert.NotNull(actual);
             Assert.IsType<Transaction>(actual);
@@ -170,7 +170,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbConnection>();
             mock.Setup(service => service.State).Returns(ConnectionState.Open);
             mock.Setup(service => service.BeginTransaction(IsolationLevel.ReadUncommitted)).Returns(transaction);
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.BeginTransaction(IsolationLevel.ReadUncommitted);
             Assert.NotNull(actual);
             Assert.IsType<Transaction>(actual);
@@ -184,13 +184,13 @@ namespace ComporiTesting.Data
         {
             var mock = new Mock<IDbConnection>();
             IConnection sut;
-            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
             }
             mock.Verify(service => service.Dispose(), Times.Once);
 
             mock = new Mock<IDbConnection>();
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.Dispose();
 
             Assert.Null(sut.Connection);
@@ -209,7 +209,7 @@ namespace ComporiTesting.Data
             mock.Setup(service => service.CreateCommand()).Returns(command);
 
             IConnection sut;
-            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
                 // create a command, that should be disposed whenn conection is disposed.
                 sut.CreateCommand();
@@ -230,7 +230,7 @@ namespace ComporiTesting.Data
             mock.Setup(service => service.BeginTransaction()).Returns(transaction);
 
             IConnection sut;
-            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
                 // create a transaction, that should be disposed whenn conection is disposed.
                 sut.BeginTransaction();
@@ -249,7 +249,7 @@ namespace ComporiTesting.Data
             // Close will be executed once.
             //
             mock = new Mock<IDbConnection>();
-            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
                 sut.Close();
             }
@@ -260,7 +260,7 @@ namespace ComporiTesting.Data
             // Close will be executed as often es called.
             //
             mock = new Mock<IDbConnection>();
-            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
                 sut.Close();
                 sut.Close();
@@ -275,7 +275,7 @@ namespace ComporiTesting.Data
             // and direct call will be returned immediately.
             //
             mock = new Mock<IDbConnection>();
-            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Connection(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.Dispose();
             sut.Close();
             mock.Verify(service => service.Close(), Times.Once);

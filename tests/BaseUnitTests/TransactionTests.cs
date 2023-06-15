@@ -14,7 +14,7 @@ namespace ComporiTesting.Data
             var parameterMock = new Mock<IParameterFactory>();
             var mock = new Mock<IDbTransaction>();
 
-            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object);
+            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Same(mock.Object, sut.Transaction);
         }
 
@@ -33,7 +33,7 @@ namespace ComporiTesting.Data
             // Setup command property "Transaction" setter;
             IDbTransaction dbTransaction = null;
             commandMock.SetupSet(p => p.Transaction = It.IsAny<IDbTransaction>()).Callback<IDbTransaction>(value => dbTransaction = value);
-            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object);
+            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
 
             actual = sut.CreateCommand();
 
@@ -63,7 +63,7 @@ namespace ComporiTesting.Data
             int actualTimeout = 0;
             commandMock.SetupSet(p => p.Transaction = It.IsAny<IDbTransaction>()).Callback<IDbTransaction>(value => dbTransaction = value);
             commandMock.SetupSet(p => p.CommandTimeout = It.IsAny<int>()).Callback<int>(value => actualTimeout = value);
-            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object);
+            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
 
             actual = sut.CreateCommand(expectedTimeout);
 
@@ -84,7 +84,7 @@ namespace ComporiTesting.Data
             var parameterMock = new Mock<IParameterFactory>();
             var mock = new Mock<IDbTransaction>();
 
-            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object);
+            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.Commit();
             mock.Verify(service => service.Commit(), Times.Once);
         }
@@ -95,7 +95,7 @@ namespace ComporiTesting.Data
             var parameterMock = new Mock<IParameterFactory>();
             var mock = new Mock<IDbTransaction>();
 
-            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object);
+            ITransaction sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.Rollback();
             mock.Verify(service => service.Rollback(), Times.Once);
         }
@@ -105,13 +105,13 @@ namespace ComporiTesting.Data
         {
             var mock = new Mock<IDbTransaction>();
             ITransaction sut;
-            using (sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
             }
             mock.Verify(service => service.Dispose(), Times.Once);
 
             mock = new Mock<IDbTransaction>();
-            sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Transaction(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.Dispose();
 
             Assert.Null(sut.Transaction);
@@ -135,7 +135,7 @@ namespace ComporiTesting.Data
             mockTransaction.Setup(service => service.Connection).Returns(mockConnection.Object);
 
             ITransaction sut;
-            using (sut = new Transaction(mockTransaction.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Transaction(mockTransaction.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
                 // create a command, that should be disposed whenn conection is disposed.
                 sut.CreateCommand();

@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
+    <RootNamespace>ComporiTesting.Data.Sqlite</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <!-- See https://github.com/dotnet/efcore/issues/19396 why we need to do this for .NET Framework -->
+    <!-- See https://github.com/ericsink/SQLitePCL.raw/issues/485 -->
+    <!-- See https://github.com/dotnet/efcore/issues/19396 -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\SqliteSample.txt" />
+    <None Remove="Resources\SqliteSampleDatabase.txt" />
+    <None Remove="Resources\SqliteSampleSchema.txt" />
+    <None Remove="Resources\SqliteSampleSmall.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SqliteSample.txt" />
+    <EmbeddedResource Include="Resources\SqliteSampleDatabase.txt" />
+    <EmbeddedResource Include="Resources\SqliteSampleSchema.txt" />
+    <EmbeddedResource Include="Resources\SqliteSampleSmall.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageReference Include="coverlet.collector" Version="3.2.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sqlite\Sqlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

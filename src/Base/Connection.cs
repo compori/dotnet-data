@@ -21,26 +21,33 @@ namespace Compori.Data
         protected IParameterFactory parameterFactory;
 
         /// <summary>
+        /// The hydrator factory
+        /// </summary>
+        protected IHydratorFactory hydratorFactory;
+
+        /// <summary>
         /// A list of created transactions.
         /// </summary>
-        private List<ITransaction> transactions;
+        private readonly List<ITransaction> transactions;
 
         /// <summary>
         /// A list of created commands.
         /// </summary>
-        private List<ICommand> commands;
+        private readonly List<ICommand> commands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection" /> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="parameterFactory">The parameter factory.</param>
-        public Connection(IDbConnection connection, IParameterFactory parameterFactory)
+        public Connection(IDbConnection connection, IParameterFactory parameterFactory, IHydratorFactory hydratorFactory)
         {
             this.connection = connection;
             this.parameterFactory = parameterFactory;
             this.commands = new List<ICommand>();
             this.transactions = new List<ITransaction>();
+            this.hydratorFactory = hydratorFactory;
+
         }
 
         /// <summary>
@@ -84,7 +91,7 @@ namespace Compori.Data
             var internalCommand = this.connection.CreateCommand();
             internalCommand.CommandTimeout = timeout;
             
-            var command = new Command(internalCommand, this.parameterFactory);
+            var command = new Command(internalCommand, this.parameterFactory, this.hydratorFactory);
             this.commands.Add(command);
             
             return command;
@@ -100,7 +107,7 @@ namespace Compori.Data
             Guard.AssertObjectIsNotDisposed(this);
 
             this.EnsureConnectionIsOpened();
-            var transaction = new Transaction(this.connection.BeginTransaction(level), this.parameterFactory);
+            var transaction = new Transaction(this.connection.BeginTransaction(level), this.parameterFactory, this.hydratorFactory);
             this.transactions.Add(transaction);
             return transaction;
         }
@@ -114,7 +121,7 @@ namespace Compori.Data
             Guard.AssertObjectIsNotDisposed(this);
 
             this.EnsureConnectionIsOpened();
-            var transaction = new Transaction(this.connection.BeginTransaction(), this.parameterFactory);
+            var transaction = new Transaction(this.connection.BeginTransaction(), this.parameterFactory, this.hydratorFactory);
             this.transactions.Add(transaction);
             return transaction;
         }

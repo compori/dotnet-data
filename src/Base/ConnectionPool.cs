@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Compori.Data
 {
@@ -57,7 +56,7 @@ namespace Compori.Data
         /// </summary>
         /// <param name="serviceKey">The service key</param>
         /// <returns>IConnection.</returns>
-        /// <exception cref="Compori.Data.ConnectionException">Unkown connection factory for service key.</exception>
+        /// <exception cref="ConnectionException">Unkown connection factory for service key.</exception>
         public IConnection Create(string serviceKey)
         {
             Guard.AssertArgumentIsNotNullOrWhiteSpace(serviceKey, nameof(serviceKey));

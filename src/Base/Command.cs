@@ -20,12 +20,21 @@ namespace Compori.Data
         protected IParameterFactory parameterFactory;
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="Command"/> class from being created.
+        /// The hydrator factory
         /// </summary>
-        public Command(IDbCommand command, IParameterFactory parameterFactory)
+        protected IHydratorFactory hydratorFactory;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="Command" /> class from being created.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="parameterFactory">The parameter factory.</param>
+        /// <param name="hydratorFactory">The hydrator factory.</param>
+        public Command(IDbCommand command, IParameterFactory parameterFactory, IHydratorFactory hydratorFactory)
         {
             this.parameterFactory = parameterFactory;
             this.command = command;
+            this.hydratorFactory = hydratorFactory;
         }
 
         /// <summary>
@@ -114,9 +123,9 @@ namespace Compori.Data
             var result = this.ExecuteScalar();
 
             // if result is null return types default value.
-            if(result == null)
+            if (result == null)
             {
-                return default(T);
+                return default;
             }
             try
             {
@@ -135,7 +144,7 @@ namespace Compori.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="hydrate">The build function.</param>
         /// <returns>IEnumerable&lt;T&gt;.</returns>
-        protected IEnumerable<T> Read<T>(Func<IDataReader, T> hydrate)
+        protected IEnumerable<T> Read<T>(Func<IDataRecord, T> hydrate)
         {
             Guard.AssertObjectIsNotDisposed(this);
 
@@ -154,7 +163,7 @@ namespace Compori.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="hydrate">The build.</param>
         /// <returns>Returns a the object T.</returns>
-        protected T ReadFirstOrDefault<T>(Func<IDataReader, T> hydrate)
+        protected T ReadFirstOrDefault<T>(Func<IDataRecord, T> hydrate)
         {
             Guard.AssertObjectIsNotDisposed(this);
 
@@ -165,7 +174,51 @@ namespace Compori.Data
                     return hydrate(reader);
                 }
             }
-            return default(T);
+            return default;
+        }
+
+        /// <summary>
+        /// Reads the result and creates a <see cref="IEnumerable{T}" />.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        protected IEnumerable<T> Read<T>() where T : class
+        {
+            return this.Read(this.hydratorFactory.Create<T>());
+        }
+
+        /// <summary>
+        /// Reads the result and creates an object of <typeparamref name="T" />
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>T.</returns>
+        protected T ReadFirstOrDefault<T>() where T : class
+        {
+            return this.ReadFirstOrDefault(this.hydratorFactory.Create<T>());
+        }
+
+        /// <summary>
+        /// Reads result by using a specified hydrator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hydrator">The hydrator.</param>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        protected IEnumerable<T> Read<T>(IHydrator<T> hydrator)
+        {
+            Guard.AssertArgumentIsNotNull(hydrator, nameof(hydrator));
+            return this.Read(hydrator.Hydrate);
+        }
+
+        /// <summary>
+        /// Reads result by using a specified hydrator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hydrator">The hydrator.</param>
+        /// <returns>Returns a the object T.</returns>
+        protected T ReadFirstOrDefault<T>(IHydrator<T> hydrator)
+        {
+            Guard.AssertArgumentIsNotNull(hydrator, nameof(hydrator));
+            return this.ReadFirstOrDefault(hydrator.Hydrate);
         }
 
         #region ICommand Implementation
@@ -252,9 +305,29 @@ namespace Compori.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="hydrate">The build function.</param>
         /// <returns>IEnumerable&lt;T&gt;.</returns>
-        IEnumerable<T> IExecutableCommand.Read<T>(Func<IDataReader, T> hydrate)
+        IEnumerable<T> IExecutableCommand.Read<T>(Func<IDataRecord, T> hydrate)
         {
             return this.Read<T>(hydrate);
+        }
+
+        /// <summary>
+        /// Reads the result and creates a <see cref="IEnumerable{T}" />.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        IEnumerable<T> IExecutableCommand.Read<T>()
+        {
+            return this.Read<T>();
+        }
+
+        /// <summary>
+        /// Reads the result and creates an object of <typeparamref name="T" />
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>T.</returns>
+        T IExecutableCommand.ReadFirstOrDefault<T>()
+        {
+            return this.ReadFirstOrDefault<T>();
         }
 
         /// <summary>
@@ -263,9 +336,31 @@ namespace Compori.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="hydrate">The build.</param>
         /// <returns>Returns a the object T.</returns>
-        T IExecutableCommand.ReadFirstOrDefault<T>(Func<IDataReader, T> hydrate)
+        T IExecutableCommand.ReadFirstOrDefault<T>(Func<IDataRecord, T> hydrate)
         {
             return this.ReadFirstOrDefault(hydrate);
+        }
+
+        /// <summary>
+        /// Reads result by using a specified hydrator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hydrator">The hydrator.</param>
+        /// <returns>IEnumerable&lt;T&gt;.</returns>
+        IEnumerable<T> IExecutableCommand.Read<T>(IHydrator<T> hydrator)
+        {
+            return this.Read(hydrator);
+        }
+
+        /// <summary>
+        /// Reads result by using a specified hydrator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hydrator">The hydrator.</param>
+        /// <returns>Returns a the object T.</returns>
+        T IExecutableCommand.ReadFirstOrDefault<T>(IHydrator<T> hydrator)
+        {
+            return this.ReadFirstOrDefault(hydrator);
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbCommand>();
             expectedResult = 1;
             mock.Setup(service => service.ExecuteNonQuery()).Returns(expectedResult);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expectedResult, sut.Execute());
             mock.Verify(service => service.ExecuteNonQuery(), Times.Once());
         }
@@ -35,7 +35,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbCommand>();
             expectedResult = 1;
             mock.Setup(service => service.ExecuteScalar()).Returns(expectedResult);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expectedResult, sut.ExecuteScalar<int>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -44,7 +44,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(null);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<ExecuteCommandException>( ()=> sut.ExecuteScalar<int>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -53,7 +53,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(null);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Null(sut.ExecuteScalar<int?>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -62,7 +62,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns("ABC");
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<InvalidCastException>(() => sut.ExecuteScalar<int>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
         }
@@ -77,7 +77,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbCommand>();
             expectedResult = "Hello";
             mock.Setup(service => service.ExecuteScalar()).Returns(expectedResult);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expectedResult, sut.ExecuteScalar<string>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -86,7 +86,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(null);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Null(sut.ExecuteScalar<string>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -95,7 +95,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(DateTime.Now);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<InvalidCastException>(() => sut.ExecuteScalar<string>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
         }
@@ -110,7 +110,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbCommand>();
             expectedResult = 1;
             mock.Setup(service => service.ExecuteScalar()).Returns(expectedResult);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expectedResult, sut.ExecuteScalarOrDefault<int>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -119,7 +119,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(null);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(0, sut.ExecuteScalarOrDefault<int>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -128,7 +128,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(null);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Null(sut.ExecuteScalarOrDefault<int?>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -137,7 +137,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns("ABC");
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<InvalidCastException>(() => sut.ExecuteScalarOrDefault<int>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
         }
@@ -152,7 +152,7 @@ namespace ComporiTesting.Data
             mock = new Mock<IDbCommand>();
             expectedResult = "Hello";
             mock.Setup(service => service.ExecuteScalar()).Returns(expectedResult);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expectedResult, sut.ExecuteScalarOrDefault<string>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -161,7 +161,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(null);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Null(sut.ExecuteScalarOrDefault<string>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
 
@@ -170,7 +170,7 @@ namespace ComporiTesting.Data
             //
             mock = new Mock<IDbCommand>();
             mock.Setup(service => service.ExecuteScalar()).Returns(DateTime.Now);
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Throws<InvalidCastException>(() => sut.ExecuteScalarOrDefault<string>());
             mock.Verify(service => service.ExecuteScalar(), Times.Once());
         }
@@ -192,7 +192,7 @@ namespace ComporiTesting.Data
 
             mockReader.Setup(service => service.Read()).Returns(false);
             mockCommand.Setup(service => service.ExecuteReader()).Returns(mockReader.Object);
-            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = sut.Read(reader => reader.GetString(0));
             Assert.Empty(actual);
 
@@ -212,7 +212,7 @@ namespace ComporiTesting.Data
             mockReader.Setup(service => service.Read()).Returns(() => { recordIndex++; return recordIndex <= recordCount; } );
             mockReader.Setup(service => service.GetString(0)).Returns(() => recordIndex.ToString());
             mockCommand.Setup(service => service.ExecuteReader()).Returns(mockReader.Object);
-            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             actual = new List<string>(sut.Read(reader => reader.GetString(0))).ToArray();
             foreach (var i in actual)
             {
@@ -241,7 +241,7 @@ namespace ComporiTesting.Data
 
             mockReader.Setup(service => service.Read()).Returns(false);
             mockCommand.Setup(service => service.ExecuteReader()).Returns(mockReader.Object);
-            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Null(sut.ReadFirstOrDefault(reader => reader.GetString(0)));
 
             mockReader.Verify(service => service.GetString(0), Times.Never());
@@ -258,7 +258,7 @@ namespace ComporiTesting.Data
             mockReader.Setup(service => service.Read()).Returns(false);
             mockReader.Setup(service => service.GetString(0)).Returns<string>(null);
             mockCommand.Setup(service => service.ExecuteReader()).Returns(mockReader.Object);
-            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Null(sut.ReadFirstOrDefault(reader => reader.GetString(0)));
 
             mockReader.Verify(service => service.GetString(0), Times.Never());
@@ -274,7 +274,7 @@ namespace ComporiTesting.Data
             mockReader.Setup(service => service.Read()).Returns(true);
             mockReader.Setup(service => service.GetString(0)).Returns(expect);
             mockCommand.Setup(service => service.ExecuteReader()).Returns(mockReader.Object);
-            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expect, sut.ReadFirstOrDefault(reader => reader.GetString(0)));
 
             mockReader.Verify(service => service.GetString(0), Times.Once());
@@ -290,7 +290,7 @@ namespace ComporiTesting.Data
             mockReader.Setup(service => service.Read()).Returns(true);
             mockReader.Setup(service => service.GetString(0)).Returns(expect);
             mockCommand.Setup(service => service.ExecuteReader()).Returns(mockReader.Object);
-            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mockCommand.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Equal(expect, sut.ReadFirstOrDefault(reader => reader.GetString(0)));
 
             mockReader.Verify(service => service.GetString(0), Times.Once());
@@ -306,7 +306,7 @@ namespace ComporiTesting.Data
         {
             var mock = new Mock<IDbCommand>();
 
-            ICommand sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            ICommand sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             Assert.Same(mock.Object, sut.Command);
         }
         #endregion
@@ -318,7 +318,7 @@ namespace ComporiTesting.Data
             var parameterMock = new Mock<IParameterFactory>();
             var mock = new Mock<IDbCommand>();
 
-            ICommand sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            ICommand sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             string commandText = null;
             string expect = "SELECT 1";
             mock.SetupSet(p => p.CommandText = It.IsAny<string>()).Callback<string>(value => commandText = value);
@@ -336,7 +336,7 @@ namespace ComporiTesting.Data
             var parameterFactoryMock = new Mock<IParameterFactory>();
             var mock = new Mock<IDbCommand>();
 
-            ICommand sut = new Command(mock.Object, parameterFactoryMock.Object);
+            ICommand sut = new Command(mock.Object, parameterFactoryMock.Object, new Mock<IHydratorFactory>().Object);
             Assert.Same(parameterFactoryMock.Object, sut.ParameterFactory);
         }
 
@@ -349,7 +349,7 @@ namespace ComporiTesting.Data
 
             mock.Setup(service => service.Parameters).Returns(parameterCollectionMock.Object);
 
-            ICommand sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            ICommand sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.WithParameter(parameterMock.Object);
 
             // call add once with the parameter object
@@ -364,13 +364,13 @@ namespace ComporiTesting.Data
             var mock = new Mock<IDbCommand>();
             var parameterMock = new Mock<IDataParameter>();
             ICommand sut;
-            using (sut = new Command(mock.Object, new Mock<IParameterFactory>().Object))
+            using (sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object))
             {
             }
             mock.Verify(service => service.Dispose(), Times.Once);
 
             mock = new Mock<IDbCommand>();
-            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object);
+            sut = new Command(mock.Object, new Mock<IParameterFactory>().Object, new Mock<IHydratorFactory>().Object);
             sut.Dispose();
 
             Assert.Null(sut.Command);
