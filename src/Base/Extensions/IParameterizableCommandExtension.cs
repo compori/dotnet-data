@@ -22,6 +22,54 @@ namespace Compori.Data.Extensions
         }
 
         /// <summary>
+        /// Creates the a database data parameter with specified name and boolean/bit value.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The bool value.</param>
+        /// <returns>IDbDataParameter.</returns>
+        public static ICommand WithParameter(this IParameterizableCommand command, string name, bool value)
+        {
+            return command.WithParameter(name, DbType.Boolean, value);
+        }
+
+        /// <summary>
+        /// Creates the a database data parameter with specified name and nullable boolean/bit value.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The bool value.</param>
+        /// <returns>IDbDataParameter.</returns>
+        public static ICommand WithParameter(this IParameterizableCommand command, string name, bool? value)
+        {
+            return command.WithParameter(name, DbType.Boolean, value);
+        }
+
+        /// <summary>
+        /// Creates the a database data parameter with specified name and byte value.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The byte value.</param>
+        /// <returns>IDbDataParameter.</returns>
+        public static ICommand WithParameter(this IParameterizableCommand command, string name, byte value)
+        {
+            return command.WithParameter(name, DbType.Byte, value);
+        }
+
+        /// <summary>
+        /// Creates the a database data parameter with specified name and nullable byte value.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The byte value.</param>
+        /// <returns>IDbDataParameter.</returns>
+        public static ICommand WithParameter(this IParameterizableCommand command, string name, byte? value)
+        {
+            return command.WithParameter(name, DbType.Byte, value);
+        }
+
+        /// <summary>
         /// Creates the a database data parameter with specified name and int value.
         /// </summary>
         /// <param name="command">The command.</param>
