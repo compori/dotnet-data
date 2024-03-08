@@ -10,7 +10,7 @@
     <!-- See https://github.com/dotnet/efcore/issues/19396 why we need to do this for .NET Framework -->
     <!-- See https://github.com/ericsink/SQLitePCL.raw/issues/485 -->
     <!-- See https://github.com/dotnet/efcore/issues/19396 -->
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.4" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.8" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.1.1</VersionPrefix>
     <TargetFrameworks>net35;net48;net6.0</TargetFrameworks>
     <RootNamespace>Compori.Data.SqlClient</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -37,13 +37,13 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.5</Version>
+      <Version>4.8.6</Version>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.5</Version>
+      <Version>4.8.6</Version>
     </PackageReference>
   </ItemGroup>
 

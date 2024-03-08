@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.1.1</VersionPrefix>
     <TargetFrameworks>net35;net48;net6.0</TargetFrameworks>
     <RootNamespace>Compori.Data</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="Compori.Base" Version="0.4.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
   
 </Project>

@@ -29,6 +29,17 @@ namespace Compori.Data.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="command">The command.</param>
+        /// <returns>IList&lt;T&gt;.</returns>
+        public static IList<T> ReadList<T>(this ICommand command) where T : class
+        {
+            return new List<T>(command.Read<T>());
+        }
+
+        /// <summary>
+        /// Reads the result and creates a <see cref="IList{T}"/> using <paramref name="hydrate"/> function.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="command">The command.</param>
         /// <param name="hydrate">The hydrate.</param>
         /// <returns>IList&lt;T&gt;.</returns>
         public static IList<T> ReadList<T>(this ICommand command, Func<IDataRecord, T> hydrate)
