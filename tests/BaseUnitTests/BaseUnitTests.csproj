@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net48;net6.0</TargetFrameworks>
+    <TargetFrameworks>net35;net48;net8.0</TargetFrameworks>
     <RootNamespace>ComporiTesting.Data</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
