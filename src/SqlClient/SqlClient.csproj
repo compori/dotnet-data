@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.3.0</VersionPrefix>
+    <VersionPrefix>1.3.2</VersionPrefix>
     <TargetFrameworks>net35;net48;net8.0</TargetFrameworks>
     <RootNamespace>Compori.Data.SqlClient</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
