@@ -2,7 +2,11 @@ using Compori.Data;
 using Compori.Data.SqlClient;
 using System;
 using System.Data;
+#if NET35
 using System.Data.SqlClient;
+#else
+using Microsoft.Data.SqlClient;
+#endif
 using Xunit;
 
 namespace ComporiTesting.Data.SqlClient

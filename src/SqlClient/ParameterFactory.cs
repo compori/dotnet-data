@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Data;
+#if NET35
 using System.Data.SqlClient;
+#else
+using Microsoft.Data.SqlClient;
+#endif
 
 namespace Compori.Data.SqlClient
 {

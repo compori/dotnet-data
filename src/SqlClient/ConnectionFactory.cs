@@ -1,8 +1,10 @@
 ﻿using Compori.StringExtensions;
 using System;
-using System.Data.SqlClient;
 #if !NET35
+using Microsoft.Data.SqlClient;
 using System.Security;
+#else
+using System.Data.SqlClient;
 #endif
 
 namespace Compori.Data.SqlClient
