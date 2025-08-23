@@ -1,10 +1,8 @@
 ﻿using Compori.StringExtensions;
 using System;
-#if !NET35
-using Microsoft.Data.SqlClient;
-using System.Security;
-#else
 using System.Data.SqlClient;
+#if !NET35
+using System.Security;
 #endif
 
 namespace Compori.Data.SqlClient
@@ -20,7 +18,7 @@ namespace Compori.Data.SqlClient
         public string ConnectionString { get; private set; }
 
         /// <summary>
-        /// Gets the Hydratorfactory.
+        /// Gets the hydrator factory.
         /// </summary>
         /// <value>The hydrator factory.</value>
         public IHydratorFactory HydratorFactory { get; private set; }
@@ -29,18 +27,19 @@ namespace Compori.Data.SqlClient
         /// <summary>
         /// The SQL credential
         /// </summary>
-        private SqlCredential sqlCredential = null;
+        private SqlCredential _sqlCredential;
 #endif
         /// <summary>
         /// Configures the instance.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
+        /// <param name="hydratorFactory">The hydrator factory.</param>
         public void Configure(string connectionString, HydratorFactory hydratorFactory = null)
         {
             Guard.AssertArgumentIsNotNullOrWhiteSpace(connectionString, nameof(connectionString));
             this.ConnectionString = connectionString;
 #if !NET35
-            this.sqlCredential = null;
+            this._sqlCredential = null;
 #endif
             this.HydratorFactory = hydratorFactory ?? new HydratorFactory();
         }
@@ -51,6 +50,7 @@ namespace Compori.Data.SqlClient
         /// <param name="connectionString">The connection string.</param>
         /// <param name="user">The user.</param>
         /// <param name="password">The password.</param>
+        /// <param name="hydratorFactory">The hydrator factory.</param>
         public void Configure(string connectionString, string user, string password, HydratorFactory hydratorFactory = null)
         {
             Guard.AssertArgumentIsNotNullOrWhiteSpace(user, nameof(user));
@@ -64,13 +64,13 @@ namespace Compori.Data.SqlClient
             };
             this.ConnectionString = builder.ToString();
 #else
-            SecureString securePassword = new SecureString();
+            var securePassword = new SecureString();
             foreach (var character in password.ToCharArray())
             {
                 securePassword.AppendChar(character);
             }
             securePassword.MakeReadOnly();
-            this.sqlCredential = new SqlCredential(user, securePassword);
+            this._sqlCredential = new SqlCredential(user, securePassword);
 #endif
         }
 
@@ -85,10 +85,10 @@ namespace Compori.Data.SqlClient
                 throw new InvalidOperationException("Connection string is not set.");
             }
 #if !NET35
-            if (this.sqlCredential != null)
+            if (this._sqlCredential != null)
             {
                 return new Connection(
-                    new SqlConnection(this.ConnectionString, this.sqlCredential), 
+                    new SqlConnection(this.ConnectionString, this._sqlCredential), 
                     new ParameterFactory(), 
                     this.HydratorFactory ?? new HydratorFactory());
             }

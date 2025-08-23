@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Data;
-#if NET35
 using System.Data.SqlClient;
-#else
-using Microsoft.Data.SqlClient;
-#endif
 
 namespace Compori.Data.SqlClient
 {
@@ -15,7 +11,7 @@ namespace Compori.Data.SqlClient
     public class ParameterFactory : IParameterFactory
     {
         /// <summary>
-        /// Creates the a database data parameter with specified name, type and value.
+        /// Creates the database data parameter with specified name, type and value.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="dbType">Type of the database.</param>
@@ -119,7 +115,7 @@ namespace Compori.Data.SqlClient
         #region IDbDataParameter Implementation
 
         /// <summary>
-        /// Creates the a database data parameter with specified name, type and value.
+        /// Creates the database data parameter with specified name, type and value.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="dbType">Type of the database.</param>
